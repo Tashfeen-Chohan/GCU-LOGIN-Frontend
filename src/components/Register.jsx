@@ -74,7 +74,7 @@ const Register = () => {
             <img
               src={Uni}
               alt="Register Image"
-              width={60}
+              width={100}
               className="md:w-[90%]"
             />
           </div>

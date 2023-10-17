@@ -53,7 +53,7 @@ const Login = ({setLogin}) => {
             <img
               src={Gcu}
               alt="Login Image"
-              width={60}
+              width={100}
               className="md:w-[55%]"
             />
             {/* <img src={Uni} alt="Register Image" width={60} className="md:w-[75%]" /> */}
