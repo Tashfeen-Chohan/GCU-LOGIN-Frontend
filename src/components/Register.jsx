@@ -46,7 +46,7 @@ const Register = () => {
       major
     ) {
       axios
-        .post("https://gcu-login.vercel.app/api/register", student)
+        .post("https://gcu-login-backend.vercel.app/api/register", student)
         .then((res) => {
           console.log(res);
           // alert("Login Successfulyy");

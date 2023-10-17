@@ -28,7 +28,7 @@ const Login = ({setLogin}) => {
     const { rollno, password } = student;
     if (rollno && password) {
       axios
-        .post("https://gcu-login.vercel.app/api/login", student)
+        .post("https://gcu-login-backend.vercel.app/api/login", student)
         .then((res) => {
           console.log(res);
           setLogin(res.data.student)
