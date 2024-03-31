@@ -4,14 +4,17 @@ import { FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { PiStudentFill } from "react-icons/pi";
 import axios from "axios";
+import { BarLoader } from "react-spinners";
+import { toast } from "react-toastify";
 
-const Login = ({setLogin}) => {
+const Login = ({ setLogin }) => {
   const [student, setStudent] = useState({
     rollno: "",
     password: "",
   });
 
   const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -23,20 +26,26 @@ const Login = ({setLogin}) => {
   }
 
   // HANDLE LOGIN
-  function handleLogin(e) {
+  async function handleLogin(e) {
     e.preventDefault();
     const { rollno, password } = student;
-    if (rollno && password) {
-      axios
-        .post("https://gcu-login-backend.vercel.app/api/login", student)
-        .then((res) => {
-          console.log(res);
-          setLogin(res.data.student)
-          navigate("/");
-        })
-        .catch((err) => setError(err.response.data.message));
-    } else {
-      setError("All fields are required")
+    try {
+      setLoading(true);
+      if (rollno && password) {
+        const res = await axios.post(
+          "https://gcu-login-backend.vercel.app/api/login",
+          student
+        );
+        setLogin(res.data.student);
+        toast.success("Login Successfully");
+        navigate("/");
+      } else {
+        setError("All fields are required");
+      }
+    } catch (err) {
+      setError(err.response.data.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -103,7 +112,13 @@ const Login = ({setLogin}) => {
               </div>
 
               {/* ERROR DIV */}
-              <div className={error? "block text-red-600 text-sm font-bold w-[84%]": "hidden"}>
+              <div
+                className={
+                  error
+                    ? "block text-red-600 text-sm font-bold w-[84%]"
+                    : "hidden"
+                }
+              >
                 {error}
               </div>
 
@@ -112,7 +127,11 @@ const Login = ({setLogin}) => {
                 type="submit"
                 className="mt-3 bg-[#b20d15] hover:bg-[#86141a] font-bold text-white w-[85%] rounded py-1"
               >
-                Sign in
+                {loading ? (
+                  <BarLoader color="white" className="mx-auto my-2.5" />
+                ) : (
+                  "Sign in"
+                )}
               </button>
 
               <div className="my-2">

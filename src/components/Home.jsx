@@ -6,6 +6,7 @@ import {BiSolidEdit} from 'react-icons/bi'
 const Home = ({login, setLogin}) => {
   const {name, rollno, email, phone, address, gender, major} = login
   
+  
   return (
     <div className="min-h-screen flex justify-center items-center">
       <div className="h-[100%] w-[90%] px-3 py-5 rounded-md shadow-lg md:w-[65%] md:mt-5">

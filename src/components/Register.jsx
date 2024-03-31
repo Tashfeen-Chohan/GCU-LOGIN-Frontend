@@ -5,6 +5,8 @@ import { PiStudentFill } from "react-icons/pi";
 import { Link, useNavigate } from "react-router-dom";
 import { AiFillMail } from "react-icons/ai";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import { BarLoader } from "react-spinners";
 
 const Register = () => {
   const [student, setStudent] = useState({
@@ -18,8 +20,9 @@ const Register = () => {
     major: "",
   });
 
-  const [error, setError] = useState()
-  const navigate = useNavigate()
+  const [error, setError] = useState();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // HANDLE CHANGE FUNCTION
   function handleChange(e) {
@@ -31,34 +34,38 @@ const Register = () => {
   }
 
   // HANDLE REGISTER FUNCTION
-  function handleRegister(e) {
-    e.preventDefault()
+  async function handleRegister(e) {
+    e.preventDefault();
     const { name, rollno, email, password, phone, address, gender, major } =
       student;
-    if (
-      name &&
-      rollno &&
-      email &&
-      password &&
-      phone &&
-      address &&
-      gender &&
-      major
-    ) {
-      axios
-        .post("https://gcu-login-backend.vercel.app/api/register", student)
-        .then((res) => {
-          console.log(res);
-          // alert("Login Successfulyy");
-          navigate("/login")
-          
-        })
-        .catch((err) => setError(err.response.data.message));
-    }
-    else{
-      setError("All fields are required")
+    try {
+      setLoading(true);
+      if (
+        name &&
+        rollno &&
+        email &&
+        password &&
+        phone &&
+        address &&
+        gender &&
+        major
+      ) {
+        const res = await axios.post(
+          "https://gcu-login-backend.vercel.app/api/register",
+          student
+        );
+        toast.success("Sign up successfully!");
+        navigate("/login");
+      } else {
+        setError("All fields are required");
+      }
+    } catch (err) {
+      setError(err.response.data.message);
+    } finally {
+      setLoading(false);
     }
   }
+
 
   return (
     <div className="min-h-screen w-full flex justify-center items-center">
@@ -241,7 +248,13 @@ const Register = () => {
               </div>
 
               {/* ERROR DIV */}
-              <div className={error? "block text-red-600 text-sm font-bold w-[84%]": "hidden"}>
+              <div
+                className={
+                  error
+                    ? "block text-red-600 text-sm font-bold w-[84%]"
+                    : "hidden"
+                }
+              >
                 {error}
               </div>
 
@@ -250,7 +263,11 @@ const Register = () => {
                 type="submit"
                 className="mt-3 bg-[#b20d15] hover:bg-[#86141a] font-bold text-white w-[85%] rounded py-1"
               >
-                Sign up
+                {loading ? (
+                  <BarLoader color="white" className="my-2.5 mx-auto" />
+                ) : (
+                  "Sign up"
+                )}
               </button>
 
               <div className="flex justify-center items-center gap-5 mt-3">
@@ -262,13 +279,14 @@ const Register = () => {
               {/* SIGN IN */}
               <div className="flex items-center justify-between gap-5">
                 <span>Already have an account?</span>
-                <button className="bg-[#b20d15] hover:bg-[#86141a] text-white px-3 py-1 rounded">
+                <button
+                  type="button"
+                  className="bg-[#b20d15] hover:bg-[#86141a] text-white px-3 py-1 rounded"
+                >
                   <Link to={"/login"}>Sign in</Link>
                 </button>
               </div>
             </form>
-
-
           </div>
         </div>
       </div>
